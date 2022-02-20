@@ -29,7 +29,7 @@ void iteration(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 			}
 			else {
 				short way = rand() % 4;
-				if (way == 0 and x_cors[i] < max_x) {
+				if (way == 0) {
 					x_cors[i]++;
 				}
 				else if (way == 1) {
