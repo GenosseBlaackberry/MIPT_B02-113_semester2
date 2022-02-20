@@ -6,8 +6,8 @@ unsigned int max_x, max_y, N;
 unsigned int x_cors[10000], y_cors[10000];
 bool stopped[10000] = { 0 };
 
-void input(unsigned int &max_x, unsigned int &max_y, unsigned int &N, 
-			unsigned int x_cors[], unsigned int y_cors[]) {
+void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
+	unsigned int x_cors[], unsigned int y_cors[]) {
 	using namespace std;
 	cin >> max_x >> max_y;
 	cin >> N;
@@ -24,29 +24,22 @@ void iteration(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 		unsigned int j = 0;
 		while (stopped[i] == 0) {
 			j++;
-			short way = rand() % 4;
-			if (way == 0 and x_cors[i] < max_x) {
-				x_cors[i]++;
-				if (x_cors[i] == max_x) {
-					stopped[i] = 1;
-				}
-			}
-			else if (way == 1) {
-				x_cors[i]--;
-				if (x_cors[i] == 0) {
-					stopped[i] = 1;
-				}
-			}
-			else if (way == 2) {
-				y_cors[i]++;
-				if (y_cors[i] == max_y) {
-					stopped[i] = 1;
-				}
+			if (x_cors[i] == max_x || x_cors[i] == 0 || y_cors[i] == max_y || y_cors[i] == 0) {
+				stopped[i] = 1;
 			}
 			else {
-				y_cors[i]--;
-				if (y_cors[i] == 0) {
-					stopped[i] = 1;
+				short way = rand() % 4;
+				if (way == 0 and x_cors[i] < max_x) {
+					x_cors[i]++;
+				}
+				else if (way == 1) {
+					x_cors[i]--;
+				}
+				else if (way == 2) {
+					y_cors[i]++;
+				}
+				else {
+					y_cors[i]--;
 				}
 			}
 		}
