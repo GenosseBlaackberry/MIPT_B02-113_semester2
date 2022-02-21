@@ -5,6 +5,7 @@
 bool to_draw = 0;
 bool problem_number = 0;
 
+
 void input(unsigned int &max_x, unsigned int &max_y, unsigned int &N,
 	unsigned int x_cors[], unsigned int y_cors[]) {
 	using namespace std;
@@ -74,6 +75,7 @@ void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
 	}
 	return;
 }
+
 
 void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
 	for (unsigned int i = 0; i < N; i++) {
