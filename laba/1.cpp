@@ -3,10 +3,11 @@
 #include <ctime>
 
 bool to_draw = 0;
-bool problem_number = 0;
+bool problem_number = 1;
+bool random_locations = 1;
 
 
-void input(unsigned int &max_x, unsigned int &max_y, unsigned int &N,
+void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 	unsigned int x_cors[], unsigned int y_cors[]) {
 	using namespace std;
 	if (problem_number == 0) {
@@ -19,8 +20,14 @@ void input(unsigned int &max_x, unsigned int &max_y, unsigned int &N,
 		cin >> N;
 	}
 	for (unsigned int i = 0; i < N; i++) {
-		cin >> x_cors[i];
-		cin >> y_cors[i];
+		if (random_locations == 0) {
+			cin >> x_cors[i];
+			cin >> y_cors[i];
+		}
+		else {
+			x_cors[i] = rand() % max_x;
+			y_cors[i] = rand() % max_y;
+		}
 	}
 	return;
 }
