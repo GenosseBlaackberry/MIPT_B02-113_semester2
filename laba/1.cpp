@@ -4,15 +4,13 @@
 
 const bool TO_DRAW = 1;
 const bool RANDOM_LOCATIONS = 1;
-bool INTERACTION;
-short PROBLEM_NUMBER;
 
 void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
-	unsigned int x_cors[], unsigned int y_cors[]) {
+	unsigned int x_cors[], unsigned int y_cors[], short problem_type, bool interaction) {
 
 	using namespace std;
 	for (unsigned int i = 0; i < N;) {
-		if (PROBLEM_NUMBER != 2) {
+		if (problem_type != 2) {
 			if (RANDOM_LOCATIONS == 0) {
 				cin >> x_cors[i];
 				cin >> y_cors[i];
@@ -32,7 +30,7 @@ void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 			}
 		}
 		bool same_counter = 0;
-		if (INTERACTION == 1) {
+		if (interaction == 1) {
 			for (unsigned int j = 0; j < i; j++) {
 				if (i != j && x_cors[i] == x_cors[j] && y_cors[i] == y_cors[j]) {
 					same_counter++;
@@ -41,7 +39,7 @@ void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 			}
 		}
 
-		if(same_counter == 0) {
+		if (same_counter == 0) {
 			i++;
 		}
 	}
@@ -50,40 +48,22 @@ void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 
 void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
-	unsigned int x_cors[], unsigned int y_cors[]) {
+	unsigned int x_cors[], unsigned int y_cors[], short &problem_type, bool &interaction) {
 	using namespace std;
-
-	short problem_type;
 
 	cout << "№ of problem: ";
 	cin >> problem_type;
-
-	if (problem_type == 3) {
-		INTERACTION = 0;
-	}
-	else {
-		INTERACTION = 1;
-	}
-
-	switch (problem_type) {
-		case 0:
-			PROBLEM_NUMBER = 0;
-		case 1:
-			PROBLEM_NUMBER = 1;
-		case 2:
-			PROBLEM_NUMBER = 2;
-		case 3:
-			PROBLEM_NUMBER = 3;
-	}
+	cout << endl << "Turn on particle interaction?";
+	cin >> interaction;
 
 	srand(static_cast<unsigned int>(time(0)));
 
-	if (PROBLEM_NUMBER == 0) {
+	if (problem_type == 0) {
 		cin >> max_x;
 		max_y = max_x;
 		N = 1;
 	}
-	else if (PROBLEM_NUMBER == 1) {
+	else if (problem_type == 1) {
 		cin >> max_x >> max_y;
 		cin >> N;
 	}
@@ -92,7 +72,7 @@ void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 		cin >> max_y;
 		cin >> N;
 	}
-	generator(max_x, max_y, N, x_cors, y_cors);
+	generator(max_x, max_y, N, x_cors, y_cors, problem_type, interaction);
 	return;
 }
 
@@ -132,20 +112,20 @@ void visualization(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], unsigned int x_wanted_cors[], unsigned int y_wanted_cors[], bool stopped[],
-	bool first_iteration) {
+	bool first_iteration, short problem_type, bool interaction) {
 
 	for (unsigned int i = 0; i < N; i++) {
 		if (first_iteration == 0) {
 			for (unsigned int j = i; j < N; j++) {
 				x_cors[i] = x_wanted_cors[i];
 				y_cors[i] = y_wanted_cors[i];
-				if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j] || INTERACTION == 0) {
+				if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j] || interaction == 0) {
 					x_cors[j] = x_wanted_cors[j];
 					y_cors[j] = y_wanted_cors[j];
 				}
 			}
 		}
-		if (PROBLEM_NUMBER != 2) {
+		if (problem_type != 2) {
 			if (x_cors[i] == max_x - 1 || x_cors[i] == 0 || y_cors[i] == max_y - 1 || y_cors[i] == 0) {
 				stopped[i] = 1;
 			}
@@ -160,11 +140,11 @@ void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
 }
 
 
-void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[], bool stopped[], bool interaction) {
 
 	for (unsigned int i = 0; i < N; i++) {
 		for (unsigned int j = i + 1; j < N; j++) {
-			if (INTERACTION == 1 && 
+			if (interaction == 1 &&
 				(x_cors[i] - x_cors[j]) * (x_cors[i] - x_cors[j]) + (y_cors[i] - y_cors[j]) * (y_cors[i] - y_cors[j]) <= 1) {
 				stopped[i] = 1;
 				stopped[j] = 1;
@@ -176,13 +156,13 @@ void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[],
 
 
 unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
-	unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], short problem_type, bool interaction) {
 
 	unsigned int x_wanted_cors[1000], y_wanted_cors[1000];
 	unsigned int stop_counter = 0;
 	unsigned int modulation_time = 0;
-	move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 1);
-	stand_checker(N, x_cors, y_cors, stopped);
+	move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 1, problem_type, interaction);
+	stand_checker(N, x_cors, y_cors, stopped, interaction);
 	visualization(max_x, max_y, N, x_cors, y_cors, stopped, modulation_time);
 	for (unsigned int i = 0; i < N; i++) {
 		if (stopped[i] == 1) {
@@ -196,7 +176,7 @@ unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 			x_wanted_cors[i] = x_cors[i];
 			y_wanted_cors[i] = y_cors[i];
 			if (stopped[i] == 0) {
-				if (PROBLEM_NUMBER != 2) {
+				if (problem_type != 2) {
 					short way = rand() % 4;
 					if (way == 0) {
 						x_wanted_cors[i]++;
@@ -225,25 +205,25 @@ unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 				stop_counter++;
 			}
 		}
-		move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 0);
-		stand_checker(N, x_cors, y_cors, stopped);
+		move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 0, problem_type, interaction);
+		stand_checker(N, x_cors, y_cors, stopped, interaction);
+		visualization(max_x, max_y, N, x_cors, y_cors, stopped, modulation_time);
 		stop_counter = 0;
 		for (unsigned int i = 0; i < N; i++) {
 			if (stopped[i] == 1) {
 				stop_counter++;
 			}
 		}
-		visualization(max_x, max_y, N, x_cors, y_cors, stopped, modulation_time);
 	}
 	return modulation_time;
 }
 
 
 void output(unsigned int max_x, unsigned int max_y, unsigned int N,
-	unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], short problem_type, bool interaction) {
 
 	using namespace std;
-	unsigned int to_print = iterations(max_x, max_y, N, x_cors, y_cors, stopped);
+	unsigned int to_print = iterations(max_x, max_y, N, x_cors, y_cors, stopped, problem_type, interaction);
 	cout << endl;
 	cout << to_print;
 }
@@ -253,7 +233,9 @@ int main() {
 	unsigned int max_x, max_y, N;
 	unsigned int x_cors[1000], y_cors[1000];
 	bool stopped[1000] = { 0 };
-	input(max_x, max_y, N, x_cors, y_cors);
-	output(max_x, max_y, N, x_cors, y_cors, stopped);
+	short problem_type;
+	bool interaction;
+	input(max_x, max_y, N, x_cors, y_cors, problem_type, interaction);
+	output(max_x, max_y, N, x_cors, y_cors, stopped, problem_type, interaction);
 	return 0;
 }
