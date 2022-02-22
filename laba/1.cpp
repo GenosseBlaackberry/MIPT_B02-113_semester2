@@ -2,9 +2,51 @@
 #include <cstdlib>
 #include <ctime>
 
+const bool INTERACTION = 0;
 const bool TO_DRAW = 1;
-const short PROBLEM_NUMBER = 2;
+const short PROBLEM_NUMBER = 1;
 const bool RANDOM_LOCATIONS = 1;
+
+void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
+	unsigned int x_cors[], unsigned int y_cors[]) {
+
+	using namespace std;
+	for (unsigned int i = 0; i < N;) {
+		if (PROBLEM_NUMBER != 2) {
+			if (RANDOM_LOCATIONS == 0) {
+				cin >> x_cors[i];
+				cin >> y_cors[i];
+			}
+			else {
+				x_cors[i] = rand() % max_x;
+				y_cors[i] = rand() % max_y;
+			}
+		}
+		else {
+			x_cors[i] = 0;
+			if (RANDOM_LOCATIONS == 0) {
+				cin >> y_cors[i];
+			}
+			else {
+				y_cors[i] = rand() % max_y;
+			}
+		}
+		bool same_counter = 0;
+		if (INTERACTION == 1) {
+			for (unsigned int j = 0; j < i; j++) {
+				if (i != j && x_cors[i] == x_cors[j] && y_cors[i] == y_cors[j]) {
+					same_counter++;
+					break;
+				}
+			}
+		}
+
+		if(same_counter == 0) {
+			i++;
+		}
+	}
+	return;
+}
 
 
 void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
@@ -27,33 +69,14 @@ void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 		cin >> max_y;
 		cin >> N;
 	}
-	for (unsigned int i = 0; i < N; i++) {
-		if (PROBLEM_NUMBER != 2) {
-			if (RANDOM_LOCATIONS == 0) {
-				cin >> x_cors[i];
-				cin >> y_cors[i];
-			}
-			else {
-				x_cors[i] = rand() % max_x;
-				y_cors[i] = rand() % max_y;
-			}
-		}
-		else {
-			x_cors[i] = 0;
-			if (RANDOM_LOCATIONS == 0) {
-				cin >> y_cors[i];
-			}
-			else {
-				y_cors[i] = rand() % max_y;
-			}
-		}
-	}
+	generator(max_x, max_y, N, x_cors, y_cors);
 	return;
 }
 
 
 void visualization(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], unsigned int modulation_time) {
+
 	if (TO_DRAW == 1) {
 		using namespace std;
 		cout << endl;
@@ -87,12 +110,13 @@ void visualization(unsigned int max_x, unsigned int max_y, unsigned int N,
 void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], unsigned int x_wanted_cors[], unsigned int y_wanted_cors[], bool stopped[],
 	bool first_iteration) {
+
 	for (unsigned int i = 0; i < N; i++) {
 		if (first_iteration == 0) {
 			for (unsigned int j = i; j < N; j++) {
 				x_cors[i] = x_wanted_cors[i];
 				y_cors[i] = y_wanted_cors[i];
-				if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j]) {
+				if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j] || INTERACTION == 0) {
 					x_cors[j] = x_wanted_cors[j];
 					y_cors[j] = y_wanted_cors[j];
 				}
@@ -114,9 +138,11 @@ void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 
 void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+
 	for (unsigned int i = 0; i < N; i++) {
 		for (unsigned int j = i + 1; j < N; j++) {
-			if ((x_cors[i] - x_cors[j]) * (x_cors[i] - x_cors[j]) + (y_cors[i] - y_cors[j]) * (y_cors[i] - y_cors[j]) <= 1) {
+			if (INTERACTION == 1 && 
+				(x_cors[i] - x_cors[j]) * (x_cors[i] - x_cors[j]) + (y_cors[i] - y_cors[j]) * (y_cors[i] - y_cors[j]) <= 1) {
 				stopped[i] = 1;
 				stopped[j] = 1;
 			}
@@ -128,10 +154,12 @@ void stand_checker(unsigned int N, unsigned int x_cors[], unsigned int y_cors[],
 
 unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+
 	unsigned int x_wanted_cors[1000], y_wanted_cors[1000];
 	unsigned int stop_counter = 0;
 	unsigned int modulation_time = 0;
 	move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 1);
+	stand_checker(N, x_cors, y_cors, stopped);
 	visualization(max_x, max_y, N, x_cors, y_cors, stopped, modulation_time);
 	for (unsigned int i = 0; i < N; i++) {
 		if (stopped[i] == 1) {
@@ -190,6 +218,7 @@ unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 void output(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], bool stopped[]) {
+
 	using namespace std;
 	unsigned int to_print = iterations(max_x, max_y, N, x_cors, y_cors, stopped);
 	cout << endl;
