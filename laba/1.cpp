@@ -2,31 +2,50 @@
 #include <cstdlib>
 #include <ctime>
 
-bool to_draw = 0;
-bool problem_number = 1;
-bool random_locations = 1;
+const bool TO_DRAW = 1;
+const short PROBLEM_NUMBER = 2;
+const bool RANDOM_LOCATIONS = 1;
 
 
 void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 	unsigned int x_cors[], unsigned int y_cors[]) {
 	using namespace std;
-	if (problem_number == 0) {
+
+	srand(static_cast<unsigned int>(time(0)));
+
+	if (PROBLEM_NUMBER == 0) {
 		cin >> max_x;
 		max_y = max_x;
 		N = 1;
 	}
-	else {
+	else if (PROBLEM_NUMBER == 1) {
 		cin >> max_x >> max_y;
 		cin >> N;
 	}
+	else {
+		max_x = 1;
+		cin >> max_y;
+		cin >> N;
+	}
 	for (unsigned int i = 0; i < N; i++) {
-		if (random_locations == 0) {
-			cin >> x_cors[i];
-			cin >> y_cors[i];
+		if (PROBLEM_NUMBER != 2) {
+			if (RANDOM_LOCATIONS == 0) {
+				cin >> x_cors[i];
+				cin >> y_cors[i];
+			}
+			else {
+				x_cors[i] = rand() % max_x;
+				y_cors[i] = rand() % max_y;
+			}
 		}
 		else {
-			x_cors[i] = rand() % max_x;
-			y_cors[i] = rand() % max_y;
+			x_cors[i] = 0;
+			if (RANDOM_LOCATIONS == 0) {
+				cin >> y_cors[i];
+			}
+			else {
+				y_cors[i] = rand() % max_y;
+			}
 		}
 	}
 	return;
@@ -35,7 +54,7 @@ void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 
 void visualization(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], unsigned int modulation_time) {
-	if (to_draw == 1) {
+	if (TO_DRAW == 1) {
 		using namespace std;
 		cout << endl;
 		cout << modulation_time << endl;
@@ -66,18 +85,28 @@ void visualization(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 
 void move_checker(unsigned int max_x, unsigned int max_y, unsigned int N,
-	unsigned int x_cors[], unsigned int y_cors[], unsigned int x_wanted_cors[], unsigned int y_wanted_cors[], bool stopped[]) {
+	unsigned int x_cors[], unsigned int y_cors[], unsigned int x_wanted_cors[], unsigned int y_wanted_cors[], bool stopped[],
+	bool first_iteration) {
 	for (unsigned int i = 0; i < N; i++) {
-		for (unsigned int j = i; j < N; j++) {
-			x_cors[i] = x_wanted_cors[i];
-			y_cors[i] = y_wanted_cors[i];
-			if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j]) {
-				x_cors[j] = x_wanted_cors[j];
-				y_cors[j] = y_wanted_cors[j];
+		if (first_iteration == 0) {
+			for (unsigned int j = i; j < N; j++) {
+				x_cors[i] = x_wanted_cors[i];
+				y_cors[i] = y_wanted_cors[i];
+				if (x_wanted_cors[i] != x_wanted_cors[j] || y_wanted_cors[i] != y_wanted_cors[j]) {
+					x_cors[j] = x_wanted_cors[j];
+					y_cors[j] = y_wanted_cors[j];
+				}
 			}
 		}
-		if (x_cors[i] == max_x - 1 || x_cors[i] == 0 || y_cors[i] == max_y - 1 || y_cors[i] == 0) {
-			stopped[i] = 1;
+		if (PROBLEM_NUMBER != 2) {
+			if (x_cors[i] == max_x - 1 || x_cors[i] == 0 || y_cors[i] == max_y - 1 || y_cors[i] == 0) {
+				stopped[i] = 1;
+			}
+		}
+		else {
+			if (y_cors[i] == max_y - 1 || y_cors[i] == 0) {
+				stopped[i] = 1;
+			}
 		}
 	}
 	return;
@@ -102,7 +131,13 @@ unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_wanted_cors[1000], y_wanted_cors[1000];
 	unsigned int stop_counter = 0;
 	unsigned int modulation_time = 0;
+	move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 1);
 	visualization(max_x, max_y, N, x_cors, y_cors, stopped, modulation_time);
+	for (unsigned int i = 0; i < N; i++) {
+		if (stopped[i] == 1) {
+			stop_counter++;
+		}
+	}
 	while (stop_counter < N) {
 		stop_counter = 0;
 		modulation_time++;
@@ -110,25 +145,36 @@ unsigned int iterations(unsigned int max_x, unsigned int max_y, unsigned int N,
 			x_wanted_cors[i] = x_cors[i];
 			y_wanted_cors[i] = y_cors[i];
 			if (stopped[i] == 0) {
-				short way = rand() % 4;
-				if (way == 0) {
-					x_wanted_cors[i]++;
-				}
-				else if (way == 1) {
-					x_wanted_cors[i]--;
-				}
-				else if (way == 2) {
-					y_wanted_cors[i]++;
+				if (PROBLEM_NUMBER != 2) {
+					short way = rand() % 4;
+					if (way == 0) {
+						x_wanted_cors[i]++;
+					}
+					else if (way == 1) {
+						x_wanted_cors[i]--;
+					}
+					else if (way == 2) {
+						y_wanted_cors[i]++;
+					}
+					else {
+						y_wanted_cors[i]--;
+					}
 				}
 				else {
-					y_wanted_cors[i]--;
+					short way = rand() % 2;
+					if (way == 0) {
+						y_wanted_cors[i]++;
+					}
+					else if (way == 1) {
+						y_wanted_cors[i]--;
+					}
 				}
 			}
 			else {
 				stop_counter++;
 			}
 		}
-		move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped);
+		move_checker(max_x, max_y, N, x_cors, y_cors, x_wanted_cors, y_wanted_cors, stopped, 0);
 		stand_checker(N, x_cors, y_cors, stopped);
 		stop_counter = 0;
 		for (unsigned int i = 0; i < N; i++) {
