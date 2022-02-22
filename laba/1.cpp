@@ -2,10 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 
-const bool INTERACTION = 0;
 const bool TO_DRAW = 1;
-const short PROBLEM_NUMBER = 1;
 const bool RANDOM_LOCATIONS = 1;
+bool INTERACTION;
+short PROBLEM_NUMBER;
 
 void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[]) {
@@ -52,6 +52,29 @@ void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 	unsigned int x_cors[], unsigned int y_cors[]) {
 	using namespace std;
+
+	short problem_type;
+
+	cout << "№ of problem: ";
+	cin >> problem_type;
+
+	if (problem_type == 3) {
+		INTERACTION = 0;
+	}
+	else {
+		INTERACTION = 1;
+	}
+
+	switch (problem_type) {
+		case 0:
+			PROBLEM_NUMBER = 0;
+		case 1:
+			PROBLEM_NUMBER = 1;
+		case 2:
+			PROBLEM_NUMBER = 2;
+		case 3:
+			PROBLEM_NUMBER = 3;
+	}
 
 	srand(static_cast<unsigned int>(time(0)));
 
