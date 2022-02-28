@@ -2,14 +2,16 @@
 #include <cstdlib>
 #include <ctime>
 
-const bool TO_DRAW = 1;
+const bool TO_DRAW = 0;
 const bool RANDOM_LOCATIONS = 1;
+const unsigned int TESTS_AMOUNT = 100;
 
 void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
-	unsigned int x_cors[], unsigned int y_cors[], short problem_type, bool interaction) {
+	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], short problem_type, bool interaction) {
 
 	using namespace std;
 	for (unsigned int i = 0; i < N;) {
+		stopped[i] = 0;
 		if (problem_type != 2) {
 			if (RANDOM_LOCATIONS == 0) {
 				cin >> x_cors[i];
@@ -48,12 +50,12 @@ void generator(unsigned int max_x, unsigned int max_y, unsigned int N,
 
 
 void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
-	unsigned int x_cors[], unsigned int y_cors[], short &problem_type, bool &interaction) {
+	unsigned int x_cors[], unsigned int y_cors[], short& problem_type, bool& interaction) {
 	using namespace std;
 
 	cout << "№ of problem: ";
 	cin >> problem_type;
-	cout << endl << "Turn on particle interaction?";
+	cout << endl << "Turn on particle interaction? ";
 	cin >> interaction;
 
 	srand(static_cast<unsigned int>(time(0)));
@@ -72,7 +74,6 @@ void input(unsigned int& max_x, unsigned int& max_y, unsigned int& N,
 		cin >> max_y;
 		cin >> N;
 	}
-	generator(max_x, max_y, N, x_cors, y_cors, problem_type, interaction);
 	return;
 }
 
@@ -223,9 +224,13 @@ void output(unsigned int max_x, unsigned int max_y, unsigned int N,
 	unsigned int x_cors[], unsigned int y_cors[], bool stopped[], short problem_type, bool interaction) {
 
 	using namespace std;
-	unsigned int to_print = iterations(max_x, max_y, N, x_cors, y_cors, stopped, problem_type, interaction);
+	unsigned int to_print = 0;
+	for (unsigned int i = 0; i < TESTS_AMOUNT; i++) {
+		generator(max_x, max_y, N, x_cors, y_cors, stopped, problem_type, interaction);
+		to_print += iterations(max_x, max_y, N, x_cors, y_cors, stopped, problem_type, interaction);
+	}
 	cout << endl;
-	cout << to_print;
+	cout << float(to_print)/float(TESTS_AMOUNT);
 }
 
 
