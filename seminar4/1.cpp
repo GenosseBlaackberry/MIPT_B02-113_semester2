@@ -11,3 +11,9 @@ void first() {
 	}
 	first();
 }
+
+
+int main() {
+	first();
+	return 0;
+}
