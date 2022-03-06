@@ -16,3 +16,9 @@ void fifth() {
 	fifth_iteration(n);
 	return;
 }
+
+
+int main() {
+	fifth();
+	return 0;
+}
