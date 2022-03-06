@@ -13,3 +13,9 @@ void second() {
 	}
 	second();
 }
+
+
+int main() {
+	second();
+	return 0;
+}
