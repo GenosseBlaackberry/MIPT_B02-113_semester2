@@ -24,3 +24,9 @@ void sixth() {
 	cin >> n;
 	cout << female(n) << ' ' << male(n);
 }
+
+
+int main() {
+	sixth();
+	return 0;
+}
