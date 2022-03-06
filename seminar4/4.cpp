@@ -23,3 +23,9 @@ void forth() {
 	std::cout << counter;
 	return;
 }
+
+
+int main() {
+	forth();
+	return 0;
+}
