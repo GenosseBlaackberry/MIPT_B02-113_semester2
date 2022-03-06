@@ -19,3 +19,9 @@ void third() {
 	std::cout << average;
 	return;
 }
+
+
+int main() {
+	third();
+	return 0;
+}
