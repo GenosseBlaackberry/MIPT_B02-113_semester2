@@ -1,3 +1,5 @@
+#include <iostream>
+
 void first() {
 	unsigned int temp;
 	using namespace std;
