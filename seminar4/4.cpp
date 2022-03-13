@@ -1,3 +1,5 @@
+#include <iostream>
+
 void forth_iteration(unsigned int& counter, unsigned int& max) {
 	using namespace std;
 	unsigned int temp;
