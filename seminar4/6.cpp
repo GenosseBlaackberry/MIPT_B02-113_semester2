@@ -1,3 +1,5 @@
+#include <iostream>
+
 int female(unsigned int n);
 
 int male(unsigned int n);
