@@ -9,30 +9,34 @@ void swipe(unsigned int arr[], unsigned int first, unsigned int second) {
 }
 
 void sort(unsigned int arr[], unsigned int from, unsigned int till) {
-	if (2 * from >= till - 2){
+	if (2 * from >= till) {
 		return;
-	}
-	if (arr[2 * from + 1] >= arr[2 * from + 2]){
-		if (arr[2 * from + 1] >= arr[from]) {
-			swipe(arr, 2 * from + 1, from);
-		}
-	}
-	else if (arr[2 * from + 2] >= arr[from]) {
-		std::cout << arr[2 * from + 2] << ' ' << arr[from] << std::endl;
-		swipe(arr, 2 * from + 2, from);
 	}
 	sort(arr, 2 * from + 1, till);
 	sort(arr, 2 * from + 2, till);
+	if (2 * from + 2 <= till) {
+		if (arr[2 * from + 2] > arr[2 * from + 1]) {
+			if (arr[2 * from + 2] > arr[from]) {
+				swipe(arr, 2 * from + 2, from);
+			}
+		}
+		else if (arr[2 * from + 1] > arr[from]) {
+			swipe(arr, 2 * from + 1, from);
+		}
+	}
+	else if (arr[2 * from + 1] > arr[from]) {
+		swipe(arr, 2 * from + 1, from);
+	}
 	return;
 }
 
 void pyramid(unsigned int arr[], unsigned int length) {
 	unsigned int temp;
-	if (length == 1) {
+	if (length == 0) {
 		return;
 	}
-	swipe(arr, 0, length - 1);
 	sort(arr, 0, length);
+	swipe(arr, 0, length);
 	pyramid(arr, length - 1);
 	return;
 }
@@ -46,7 +50,7 @@ void seventh() {
 	for (unsigned int i = 0; i < n; i++) {
 		cin >> arr[i];
 	}
-	pyramid(arr, n);
+	pyramid(arr, n - 1);
 	for (unsigned int i = 0; i < n; i++) {
 		cout << arr[i] << ' ';
 	}
