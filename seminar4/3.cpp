@@ -1,3 +1,5 @@
+#include <iostream>
+
 void third_iteration(int &number, int &sum) {
 	using namespace std;
 	unsigned int temp;
