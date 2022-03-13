@@ -1,3 +1,5 @@
+#include <iostream>
+
 void swipe(unsigned int arr[], unsigned int first, unsigned int second) {
 	unsigned int temp = arr[first];
 	arr[first] = arr[second];
