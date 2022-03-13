@@ -1,3 +1,5 @@
+#include <iostream>
+
 void second() {
 	unsigned int temp1, temp2;
 	using namespace std;
