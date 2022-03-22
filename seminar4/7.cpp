@@ -31,7 +31,6 @@ void sort(unsigned int arr[], unsigned int from, unsigned int till) {
 }
 
 void pyramid(unsigned int arr[], unsigned int length) {
-	unsigned int temp;
 	if (length == 0) {
 		return;
 	}
