@@ -1,9 +1,12 @@
 #include <iostream>
 
-void my_personal_swap(int *a, int *b) {
+void my_personal_swap(int* a, int* b) {
 	using namespace std;
-	int *temp = new int;
-	if (a == nullptr || b == nullptr || temp == nullptr) {
+	if (a == nullptr || b == nullptr) {
+		return;
+	}
+	int* temp = new (nothrow) int;
+	if (temp == nullptr) {
 		cout << "Error in memory alocation";
 		delete temp;
 		return;
