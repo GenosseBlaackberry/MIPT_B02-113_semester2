@@ -18,7 +18,7 @@ void create_arrays(float pdf[], float psi[], float T, unsigned size) {
 }
 
 float mean(float const psi[], float const pdf[], float const dv, unsigned size) {
-    float* x = new (nothrow) float;
+    float* x = new (std::nothrow) float[size];
     if (x == nullptr) {
         std::cout << "Error in memory alocation";
         delete[] x;
@@ -42,28 +42,12 @@ float mean(float const psi[], float const pdf[], float const dv, unsigned size) 
     return dv * sum;
 }
 
-float recursion(float const psi[], float const pdf[], float const dv, unsigned from, unsigned till) {
+float rec_mean(float const psi[], float const pdf[], float const dv, unsigned size, int from, int till) {
     if (from == till) {
         return psi[from] * pdf[from] * dv;
     }
-    float* first = new (nothrow) float;
-    if (first == nullptr) {
-        std::cout << "Error in memory alocation";
-        delete first;
-        return 0;
-    }
-    float* second = new (nothrow) float;
-    if (second == nullptr) {
-        std::cout << "Error in memory alocation";
-        delete second;
-        return 0;
-    }
-    *first = recursion(psi, pdf, dv, from, (from + (till - from) / 2));
-    *second = recursion(psi, pdf, dv, (from + 1 + (from - till) / 2), till);
-    float output = *first + *second;
-    delete first;
-    delete second;
-    return output;
+    return (rec_mean(psi, pdf, dv, size, from, (from + (till - from) / 2)) +
+        rec_mean(psi, pdf, dv, size, (from + 1 + (till - from) / 2), till));
 }
 
 float forward_kahan_mean(float const psi[], float const pdf[], float const dv, unsigned size) {
@@ -95,9 +79,9 @@ float naive_mean(float const psi[], float const pdf[], float const dv, unsigned 
     return sum * dv;
 }
 
-void lab(){
+void lab() {
     using namespace std;
-       
+
     unsigned size = 1000;
     float* pdf = new float[size];
     float* psi = new float[size];
@@ -105,11 +89,11 @@ void lab(){
     create_arrays(pdf, psi, T, size);
 
 
-    std::cout << recursion(psi, pdf, 8 * sqrt(T) / (size - 1), 0, size - 1) << "  ";
-    std::cout << mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
-    std::cout << forward_kahan_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
-    std::cout << fma_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
-    std::cout << naive_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size);
+    cout << rec_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size, 0, size - 1) << "  ";
+    cout << mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
+    cout << forward_kahan_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
+    cout << fma_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size) << "  ";
+    cout << naive_mean(psi, pdf, 8 * sqrt(T) / (size - 1), size);
 
     delete[] pdf;
     delete[] psi;
@@ -117,7 +101,7 @@ void lab(){
     return;
 }
 
-int main(){
+int main() {
     lab();
     return 0;
 }
