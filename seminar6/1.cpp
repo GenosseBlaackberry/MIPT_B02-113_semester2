@@ -17,7 +17,7 @@ void first() {
 	for (unsigned i = 0; i < N; i++) {
 		if (sizez[i] < 0) {
 			for (unsigned j = i; j < N && j < i + minimum; j++) {
-				if (sizez[j] > 0 && -1*sizez[i] == sizez[j]) {
+				if (sizez[j] > 0 && -1 * sizez[i] == sizez[j]) {
 					minimum = j - i;
 				}
 			}
