@@ -5,9 +5,9 @@ unsigned const N_students = 10;
 unsigned const N_marks = 5;
 
 struct STUDENT {
-    std::string NAME;
-    unsigned GROUP;
-    unsigned SES[5];
+	std::string NAME;
+	unsigned GROUP = 0;
+	unsigned SES[5] = { 0 };
 };
 
 
@@ -37,10 +37,10 @@ void sort_students(STUDENT STUD1[]) {
 	for (unsigned i = 0; i < N_students; i++) {
 		indexes[i] = i;
 	}
-	
+
 	for (unsigned i = 0; i < N_students; i++) {
 		bool sorted = 1;
-		for (int j = 0; j < N_students - (i + 1); j++) {
+		for (unsigned j = 0; j < N_students - (i + 1); j++) {
 			if (STUD1[indexes[j]].NAME.compare(STUD1[indexes[j + 1]].NAME) == 1) {
 				sorted = 0;
 				swipe(indexes, j, j + 1);
@@ -50,7 +50,7 @@ void sort_students(STUDENT STUD1[]) {
 			break;
 		}
 	}
-	
+
 	for (unsigned i = 0; i < N_students; i++) {
 		output[i] = STUD1[indexes[i]];
 	}
@@ -61,25 +61,25 @@ void sort_students(STUDENT STUD1[]) {
 }
 
 void first() {
-    using namespace std;
+	using namespace std;
 
-    STUDENT STUD1[N_students];
+	STUDENT STUD1[N_students];
 
 	input_students(STUD1);
 	sort_students(STUD1);
 
 	bool no_dvoechniks = 1;
 
-    for (unsigned i = 0; i < N_students; i++) {
-        for (unsigned j = 0; j < N_marks; j++) {
+	for (unsigned i = 0; i < N_students; i++) {
+		for (unsigned j = 0; j < N_marks; j++) {
 			if (STUD1[i].SES[j] == 2) {
 				no_dvoechniks = 0;
 				cout << endl;
 				cout << STUD1[i].NAME << " " << STUD1[i].GROUP << endl;
 				break;
 			}
-        }
-    }
+		}
+	}
 	if (no_dvoechniks) {
 		cout << endl;
 		cout << "There are no dvoechniks" << endl;
@@ -88,6 +88,6 @@ void first() {
 
 
 int main() {
-    first();
-    return 0;
+	first();
+	return 0;
 }
