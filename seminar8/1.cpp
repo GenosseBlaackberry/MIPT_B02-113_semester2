@@ -1,7 +1,5 @@
 #include <iostream>
 
-const int N = 1;
-
 struct item {
     int key;
     item* next;
@@ -16,14 +14,14 @@ void add(item*& start) {
         if (now == nullptr) {
             cout << "Error in memory alocation";
             delete now;
+            return;
         }
-        else {
-            cout << endl;
-            cin >> now->key;
-            now->next = start;
-            start = now;
-        }
+        cin >> now->key;
+        now->next = start;
+        start = now;
+        cout << endl;
     }
+    return;
 }
 
 void destroy(item*& start) {
@@ -36,18 +34,20 @@ void destroy(item*& start) {
         delete temp;
     }
     start = nullptr;
+    return;
 }
 
 void print(item* start) {
     using namespace std;
     item* pt;
 
-    cout << endl;
     pt = start;
     while (pt != nullptr) {
         cout << "->" << pt->key;
         pt = pt->next;
     }
+    cout << endl;
+    return;
 }
 
 void add_ordered(item*& start) {
@@ -60,8 +60,7 @@ void add_ordered(item*& start) {
             cout << "Error in memory alocation";
             return;
         }
-        
-        cout << endl;
+
         cin >> now->key;
         if (start->key > now->key) {
             now->next = start;
@@ -73,7 +72,9 @@ void add_ordered(item*& start) {
         }
         now->next = pt->next;
         pt->next = now;
+        cout << endl;
     }
+    return;
 }
 
 void delete_by_key(item*& start) {
@@ -82,7 +83,6 @@ void delete_by_key(item*& start) {
     item* pt;
 
     if (start != nullptr) {
-        cout << endl;
         cin >> del_key;
         if (start->key == del_key) {
             item* temp = start;
@@ -99,39 +99,82 @@ void delete_by_key(item*& start) {
             pt->next = pt->next->next;
             delete temp;
         }
+        cout << endl;
     }
+    return;
 }
 
 
 void first() {
     using namespace std;
     item* prev;
+    unsigned input;
 
+    cout << "Enter your list of integers. '0' is stop symbol" << endl;
     item* start = new (nothrow) item;
     if (start == nullptr) {
         cout << "Error in memory alocation";
         delete start;
     }
     else {
-        cin >> start->key;
+        cin >> input;
+        if (input == 0) {
+            return;
+        }
+        start->key = input;
         start->next = nullptr;
         prev = start;
 
-        for (unsigned i = 0; i < N - 1; i++) {
+        while (input != 0) {
             item* now = new (nothrow) item;
             if (now == nullptr) {
                 cout << "Error in memory alocation";
                 delete now;
+                return;
             }
-            cin >> now->key;
+            cin >> input;
+            if (input == 0) {
+                continue;
+            }
+            now->key = input;
             now->next = nullptr;
             prev->next = now;
             prev = now;
         }
-        print(start);
-        delete_by_key(start);
-        print(start);
+
+        cout << "   Enter 0 to print list" << endl;
+        cout << "   Enter 1 to add item to begining" << endl;
+        cout << "   Enter 2 to destroy list" << endl;
+        cout << "   Enter 3 to add item to sorted list" << endl;
+        cout << "   Enter 4 to delete item by key" << endl;
+        cout << "   Enter 5 to exit program" << endl;
+
+        while (input != 5) {
+            cin >> input;
+            if (input == 0) {
+                cout << "Your list:" << endl;
+                print(start);
+            }
+            else if (input == 1) {
+                cout << "Enter number" << endl;
+                add(start);
+            }
+            else if (input == 2) {
+                destroy(start);
+                cout << "Your list is destroyed" << endl;
+            }
+            else if (input == 3) {
+                cout << "Enter number" << endl;
+                add_ordered(start);
+            }
+            else if (input == 4) {
+                cout << "Enter number" << endl;
+                delete_by_key(start);
+            }
+      
+        } 
     }
+    return;
 }
 int main()
 {
