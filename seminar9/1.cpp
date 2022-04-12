@@ -26,7 +26,7 @@ void print(item* start) {
 
     pt = start;
     while (pt != nullptr) {
-        cout << " -> " << pt-> key << ": " << pt->from << " " << pt->till;
+        cout << " -> " << pt->key << ": " << pt->from << " " << pt->till;
         pt = pt->next;
     }
     cout << endl;
@@ -76,7 +76,7 @@ void greedy(item*& start) {
         }
         pt = pt->next;
     }
-    
+
     cout << chosen->key << " ";
     time = chosen->till;
     pt = start;
@@ -109,7 +109,7 @@ void first() {
         if (N == 0) {
             return;
         }
-        start->key = 0;
+        cin >> start->key;
         cin >> start->from;
         cin >> start->till;
         start->next = nullptr;
@@ -122,7 +122,7 @@ void first() {
                 delete now;
                 return;
             }
-            now->key = i;
+            cin >> now->key;
             cin >> now->from;
             cin >> now->till;
             now->next = nullptr;
@@ -131,11 +131,11 @@ void first() {
         }
     }
     greedy(start);
-    print(start);
+    destroy(start);
     return;
 }
 
-int main(){
+int main() {
     first();
     return 0;
 }
