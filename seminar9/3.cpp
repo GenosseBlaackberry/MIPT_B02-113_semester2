@@ -58,7 +58,7 @@ void delete_by_key(item*& start, unsigned del_key) {
     return;
 }
 
-void greedy(item*& start) {
+void greedy(item*& start, unsigned n) {
     using namespace std;
     unsigned time;
     item* chosen = start;
@@ -70,9 +70,8 @@ void greedy(item*& start) {
 
     pt = start;
 
-    /*
     while (pt != nullptr) {
-        if (pt->till < chosen->till) {
+        if (pt->goodness > chosen->goodness) {
             chosen = pt;
 
         }
@@ -80,23 +79,21 @@ void greedy(item*& start) {
     }
 
     cout << chosen->key << " ";
-    time = chosen->till;
-    pt = start;
-
-    while (pt != nullptr) {
-        if (pt->from < time) {
-            delete_by_key(start, pt->key);
-            pt = start;
-        }
-        else {
-            pt = pt->next;
-        }
+    
+    if (chosen->mass < n) {
+        cout << chosen->mass <<endl;
+        unsigned output = n - chosen->mass;
+        delete_by_key(start, chosen->key);
+        greedy(start, output);
+        return;
     }
-    greedy(start);
-    */
+    else {
+        cout << n << endl;
+        return;
+    }
 }
 
-void first() {
+void third() {
     using namespace std;
     unsigned N, n;
     item* prev;
@@ -136,12 +133,12 @@ void first() {
         }
     }
     cin >> n;
-    print(start);
+    greedy(start, n);
     destroy(start);
     return;
 }
 
 int main() {
-    first();
+    third();
     return 0;
 }
