@@ -2,19 +2,29 @@
 
 
 unsigned energy(int array[], unsigned n) {
-    unsigned min, min_prev;
-    if (n == 1) {
-        return 0;
+    unsigned* energies = new (std::nothrow) unsigned[n];
+    unsigned output = 0;
+    if (energies == nullptr) {
+        return output;
     }
-    if (n == 2) {
-        return abs(array[1] - array[0]);
+    unsigned a, b;
+    energies[0] = 0;
+    energies[1] = abs(array[1] - array[0]);
+    for (unsigned i = 2; i < n; i++) {
+        a = energies[i - 2] + 3 * abs(array[i - 2] - array[i]);
+        b = energies[i - 1] + abs(array[i - 1] - array[i]);
+        if (a < b) {
+            energies[i] = a;
+        }
+        else {
+            energies[i] = b;
+        }
     }
-    min_prev = energy(array, n - 2) + 3 * abs(array[n - 1] - array[n - 3]);
-    min = energy(array, n - 1) + abs(array[n - 1] - array[n - 2]);
-    if (min_prev < min) {
-        return min_prev;
-    }
-    return min;
+
+    output = energies[n - 1];
+    delete[] energies;
+
+    return output;
 }
 
 void second() {
@@ -40,4 +50,3 @@ int main()
     second();
     return 0;
 }
-
